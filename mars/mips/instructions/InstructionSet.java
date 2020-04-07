@@ -83,7 +83,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 new BasicInstruction("nop",
             	 "Null operation : machine code is all zeroes",
                 BasicInstructionFormat.R_FORMAT,
-                "000000 00000 00000 00000 00000 000000",
+                //"000000 00000 00000 00000 00000 000000",
+                "110101 01000 00011 00100 00000 011111",
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -95,7 +96,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 new BasicInstruction("ADD X1,X2,X3",
             	 "Addition with overflow : set X1 to (X2 plus X3)",
                 BasicInstructionFormat.R_FORMAT,
-                "000000 sssss ttttt fffff 00000 100000",
+                //"000000 sssss ttttt fffff 00000 100000",
+                "100010  11000 ttttt 000000  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -118,7 +121,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                  new BasicInstruction("ADDS X1,X2,X3",
              	 "Add and set flags : set X1 to (X2 plus X3), and set the processor flags",
                  BasicInstructionFormat.R_FORMAT,
-                 "000000 sssss ttttt fffff 00000 100000",
+                 //"000000 sssss ttttt fffff 00000 100000",
+                "101010 11001 ttttt 000000  sssss fffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -143,11 +148,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.updateRegister(operands[0], (int) sum);
                    }
                 }));
+         
          instructionList.add(
                 new BasicInstruction("SUB X1,X2,X3",
             	 "Subtraction with overflow : set X1 to (X2 minus X3)",
                 BasicInstructionFormat.R_FORMAT,
-                "000000 sssss ttttt fffff 00000 100010",
+                //"000000 sssss ttttt fffff 00000 100010",
+                "110010 11000 ttttt 000000  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -166,11 +174,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      RegisterFile.updateRegister(operands[0], dif);
                   }
                }));
+         
          instructionList.add(
                  new BasicInstruction("SUBS X1,X2,X3",
              	 "Subtract and set flags : set X1 to (X2 minus X3), and set the processor flags",
                  BasicInstructionFormat.R_FORMAT,
-                 "000000 sssss ttttt fffff 00000 100000",
+                // "000000 sssss ttttt fffff 00000 100000",
+                "111010 11000 ttttt 000000  sssss fffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -195,11 +206,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.updateRegister(operands[0], (int) sum);
                    }
                 }));
+         
          instructionList.add(
                 new BasicInstruction("ADDI X1,X2,100",
             	 "Addition immediate with overflow : set X1 to (X2 plus unsigned 16-bit immediate)",
                 BasicInstructionFormat.I_FORMAT,
-                "001000 sssss fffff tttttttttttttttt",
+                //"001000 sssss fffff tttttttttttttttt",
+                "1001000100 tttttttttttt  sssss fffff ",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -218,11 +232,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      RegisterFile.updateRegister(operands[0], sum);
                   }
                }));
+         
          instructionList.add(
                  new BasicInstruction("ADDIS X1,X2,100",
              	 "Add an immediate and set flags : set X1 to (X2 plus unsigned 16-bit immediate), and set the processor flags",
                  BasicInstructionFormat.R_FORMAT,
-                 "000000 sssss ttttt fffff 00000 100000",
+                // "000000 sssss ttttt fffff 00000 100000",
+                "1011000100 tttttttttttt  sssss fffff ",         
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -247,11 +264,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.updateRegister(operands[0], (int) sum);
                    }
                 }));
+         
          instructionList.add(
                  new BasicInstruction("SUBI X1,X2,100",
              	 "Subtraction immediate with overflow : set X1 to (X2 minus unsigned 16-bit immediate)",
                  BasicInstructionFormat.I_FORMAT,
-                 "001000 sssss fffff tttttttttttttttt",
+                // "001000 sssss fffff tttttttttttttttt",
+                "1101000100 tttttttttttt  sssss fffff ",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -270,11 +290,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.updateRegister(operands[0], sum);
                    }
                 }));
+         
          instructionList.add(
                  new BasicInstruction("SUBIS X1,X2,100",
              	 "Subtract an immediate and set flags : set X1 to (X2 minus unsigned 16-bit immediate), and set the processor flags",
                  BasicInstructionFormat.R_FORMAT,
-                 "000000 sssss ttttt fffff 00000 100000",
+                 //"000000 sssss ttttt fffff 00000 100000",
+                 "1111000100 tttttttttttt  sssss fffff ",        
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -303,7 +326,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 new BasicInstruction("MUL X1,X2,X3",
             	 "Multiplication without overflow: Set X1 to low-order 32 bits of the product of X2 and X3",
                 BasicInstructionFormat.R_FORMAT,
-                "011100 sssss ttttt fffff 00000 000010",
+                //"011100 sssss ttttt fffff 00000 000010",
+                "100110 11000 ttttt 000000  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -313,11 +338,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         * (long) RegisterFile.getValue(operands[2]);
                      RegisterFile.updateRegister(operands[0], (int) ((product << 32) >> 32));                  }
                }));
+         
          instructionList.add(
                  new BasicInstruction("SMULH X1,X2,X3",
              	 "Signed Multiplication High: Set X1 to high-order 32 bits of the product of X2 and X3",
                  BasicInstructionFormat.R_FORMAT,
-                 "011100 sssss ttttt fffff 00000 000010",
+                // "011100 sssss ttttt fffff 00000 000010",
+                "100110 11010 ttttt 000000  sssss fffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -328,11 +356,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.updateRegister(operands[0], (int) (product >> 32));
                    }
                 }));
+         
          instructionList.add(
                  new BasicInstruction("UMULH X1,X2,X3",
              	 "Unsigned Multiplication High: Set X1 to high-order 32 bits of the product of unsigned X1 and X2",
                  BasicInstructionFormat.R_FORMAT,
-                 "011100 sssss ttttt fffff 00000 000010",
+                 //"011100 sssss ttttt fffff 00000 000010",
+                "100110 11110 ttttt 000000  sssss fffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -343,11 +374,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.updateRegister(operands[0], (int) (product >> 32));
                    }
                 }));
+         
          instructionList.add(
                 new BasicInstruction("SDIV X1,X2,X3",
             	 "Division: Divide X2 by X3 then set X1 to quotient",
                 BasicInstructionFormat.R_FORMAT,
-                "011100 sssss ttttt fffff 00000 000010",
+                //"011100 sssss ttttt fffff 00000 000010",
+                "100110 10110 ttttt 000010  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -366,11 +400,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         / RegisterFile.getValue(operands[2]));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("UDIV X1,X2,X3",
             	 "Division unsigned: Divide unsigned X2 by X3 then set X1 to quotient",
                 BasicInstructionFormat.R_FORMAT,
-                "011100 sssss ttttt fffff 00000 000010",
+                //"011100 sssss ttttt fffff 00000 000010",
+                "100110 10110 ttttt 000011  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -387,11 +424,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         (int) (((oper1 / oper2) << 32) >> 32));                  
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("AND X1,X2,X3",
             	 "Bitwise AND : Set X1 to bitwise AND of X2 and X3",
                 BasicInstructionFormat.R_FORMAT,
-                "000000 sssss ttttt fffff 00000 100100",
+                //"000000 sssss ttttt fffff 00000 100100",
+                "100010  10000 ttttt 000000  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -402,11 +442,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         & RegisterFile.getValue(operands[2]));
                   }
                }));
+         
          instructionList.add(
                  new BasicInstruction("ANDS X1,X2,X3",
              	 "Bitwise AND and set flags: Set X1 to bitwise AND of X2 and X3, then set Negative and Zero without touching Carry or oVerflow",
                  BasicInstructionFormat.R_FORMAT,
-                 "000000 sssss ttttt fffff 00000 100100",
+                 //"000000 sssss ttttt fffff 00000 100100",
+                "111010  10000 ttttt 000000  sssss fffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -419,11 +462,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.setFlags(andResult, RegisterFile.flagV(), RegisterFile.flagC());
                    }
                 }));
+         
          instructionList.add(
                  new BasicInstruction("ANDI X1,X2,100",
              	 "Bitwise AND immediate : Set X1 to bitwise AND of X2 and zero-extended 16-bit immediate",
                  BasicInstructionFormat.I_FORMAT,
-                 "001100 sssss fffff tttttttttttttttt",
+                 //"001100 sssss fffff tttttttttttttttt",
+                "1001001000 tttttttttttt  sssss fffff ",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -435,11 +481,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                          & (operands[2] & 0x0000FFFF));
                    }
                 }));
+         
          instructionList.add(
                  new BasicInstruction("ANDIS X1,X2,100",
              	 "Bitwise AND immediate and set flags: Set X1 to bitwise AND of X2 and zero-extended 16-bit immediate, then set Negative and Zero without touching Carry or oVerflow",
                  BasicInstructionFormat.I_FORMAT,
-                 "001100 sssss fffff tttttttttttttttt",
+                 //"001100 sssss fffff tttttttttttttttt",
+                "1111001000 tttttttttttt  sssss fffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -453,11 +502,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.setFlags(andResult, RegisterFile.flagV(), RegisterFile.flagC());
                    }
                 }));
+         
          instructionList.add(
                 new BasicInstruction("ORR X1,X2,X3",
             	 "Bitwise OR : Set X1 to bitwise OR of X2 and X3",
                 BasicInstructionFormat.R_FORMAT,
-                "000000 sssss ttttt fffff 00000 100101",
+                //"000000 sssss ttttt fffff 00000 100101",
+                "101010  10000 ttttt 000000  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -468,11 +520,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         | RegisterFile.getValue(operands[2]));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("ORRI X1,X2,100",
             	 "Bitwise OR immediate : Set X1 to bitwise OR of X2 and zero-extended 16-bit immediate",
                 BasicInstructionFormat.I_FORMAT,
-                "001101 sssss fffff tttttttttttttttt",
+                //"001101 sssss fffff tttttttttttttttt",
+                "1011001000 tttttttttttt  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -484,11 +539,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         | (operands[2] & 0x0000FFFF));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("EOR X1,X2,X3",
             	 "Bitwise XOR (exclusive OR) : Set X1 to bitwise XOR of X2 and X3",
                 BasicInstructionFormat.R_FORMAT,
-                "000000 sssss ttttt fffff 00000 100110",
+                //"000000 sssss ttttt fffff 00000 100110",
+                "110010  10000 ttttt 000000  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -499,11 +557,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         ^ RegisterFile.getValue(operands[2]));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("EORI X1,X2,100",
             	 "Bitwise XOR immediate : Set X1 to bitwise XOR of X2 and zero-extended 16-bit immediate",
                 BasicInstructionFormat.I_FORMAT,
-                "001110 sssss fffff tttttttttttttttt",
+                //"001110 sssss fffff tttttttttttttttt",
+                "1101001000 tttttttttttt  sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -514,12 +575,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         RegisterFile.getValue(operands[1])
                         ^ (operands[2] & 0x0000FFFF));
                   }
-               }));					
+               }));	
+         
          instructionList.add(
                 new BasicInstruction("LSL X1,X2,10",
             	 "Logical shift left: Set X1 to result of shifting X2 left by number of bits specified by immediate",
                 BasicInstructionFormat.R_FORMAT,
-                "000000 00000 sssss fffff ttttt 000000",
+                //"000000 00000 sssss fffff ttttt 000000",
+                "110100 11011 00000 tttttt sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -529,11 +593,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         RegisterFile.getValue(operands[1]) << operands[2]);
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("LSR X1,X2,10",
             	 "Shift right : Set X1 to result of shifting X2 right by number of bits specified by immediate",
                 BasicInstructionFormat.R_FORMAT,
-                "000000 00000 sssss fffff ttttt 000010",
+                //"000000 00000 sssss fffff ttttt 000010",
+                "110100 11010 00000 tttttt sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -544,26 +611,30 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         RegisterFile.getValue(operands[1]) >>> operands[2]);
                   }
                }));
+         
          instructionList.add(
                  new BasicInstruction("B target", 
              	 "Branch unconditionally : Jump to statement at target address",
              	 BasicInstructionFormat.J_FORMAT,
-                 "000010 ffffffffffffffffffffffffff",
+                 "000101 ffffffffffffffffffffffffff",
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
                    {
                       int[] operands = statement.getOperands();
-                      processJump(
-                         ((RegisterFile.getProgramCounter() & 0xF0000000)
-                                 | (operands[0] << 2)));            
+                      processJump(operands[0]);
+                         //((RegisterFile.getProgramCounter() & 0xF0000000)
+                         //      | (operands[0] << 2)));            
                    }
                 }));
+
          instructionList.add(
                  new BasicInstruction("B -100", 
              	 "Branch unconditionally : Jump a number of instructions forward equal to the specified immediate",
-             	 BasicInstructionFormat.R_FORMAT,
-                 "000010 ffffffffffffffffffffffffff",
+             	 BasicInstructionFormat.J_FORMAT,
+                 //"000010 ffffffffffffffffffffffffff",
+                 "000101 ffffffffffffffffffffffffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -572,26 +643,32 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       processJump(RegisterFile.getProgramCounter() + (operands[0]*4)-4);            
                    }
                 }));
+         
          instructionList.add(
                  new BasicInstruction("B.AL target", 
              	 "Branch always : Jump to statement at target address",
-             	 BasicInstructionFormat.J_FORMAT,
-                 "000010 ffffffffffffffffffffffffff",
+                  BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                  "01010100 fffffffffffffffffff 01111 ",
+        
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
                    {
                       int[] operands = statement.getOperands();
-                      processJump(
-                         ((RegisterFile.getProgramCounter() & 0xF0000000)
-                                 | (operands[0] << 2)));            
+                      processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+                      //processJump(operands[0]);
+                       //  ((RegisterFile.getProgramCounter() & 0xF0000000)
+                       //          | (operands[0] << 2)));            
                    }
                 }));
+/*
          instructionList.add(
                  new BasicInstruction("B.AL -100", 
              	 "Branch unconditionally : Jump a number of instructions forward equal to the specified immediate",
-             	 BasicInstructionFormat.R_FORMAT,
-                 "000010 ffffffffffffffffffffffffff",
+             	 BasicInstructionFormat.J_FORMAT,
+                 "000101 ffffffffffffffffffffffffff",
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -599,12 +676,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       int[] operands = statement.getOperands();
                       processJump(RegisterFile.getProgramCounter() + (operands[0]*4)-4);            
                    }
-                }));
+                }));*/
+
           instructionList.add(
                  new BasicInstruction("BL target",
                  "Branch with link : Set X30 to Program Counter (return address) then jump to statement at target address",
              	 BasicInstructionFormat.J_FORMAT,
-                 "000011 ffffffffffffffffffffffffff",
+                 //"000011 ffffffffffffffffffffffffff",
+                 "100101 ffffffffffffffffffffffffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -612,16 +692,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       int[] operands = statement.getOperands();
                       //TODO: maybe make this not a constant?
                       processReturnAddress(30);// RegisterFile.updateRegister(31, RegisterFile.getProgramCounter());
-                      processJump(
-                         (RegisterFile.getProgramCounter() & 0xF0000000)
-                                 | (operands[0] << 2));
+                      //processJump(
+                      //   (RegisterFile.getProgramCounter() & 0xF0000000)
+                      //           | (operands[0] << 2));
+                   //   processJump(RegisterFile.getProgramCounter() + (operands[0]*4)-4);
+                   processJump(operands[0]);
                    }
                 }));
+          
           instructionList.add(
                  new BasicInstruction("BR X1", 
              	 "Branch register unconditionally : Jump to statement whose address is in X1",
              	 BasicInstructionFormat.R_FORMAT,
-                 "000000 fffff 00000 00000 00000 001000",
+                 //"000000 fffff 00000 00000 00000 001000",
+                "110101 10000 11111 000000 fffff 00000",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -630,11 +715,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       processJump(RegisterFile.getValue(operands[0]));
                    }
                 }));
+          
           instructionList.add(
                   new BasicInstruction("CBNZ X1,label",
                   "Conditional branch not zero : Branch to statement at label's address if X1 is NOT zero",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
-                  "000001 fffff 00000 ssssssssssssssss",
+                  //"000001 fffff 00000 ssssssssssssssss",
+                  "10110101 sssssssssssssssssss fffff",
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -646,11 +733,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        }
                     }
                  }));
+
           instructionList.add(
                   new BasicInstruction("CBNZ X1,-100", 
               	 "Conditional branch not zero : If X1 is NOT zero, jump a number of instructions forward equal to the specified immediate",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
-                 "000001 fffff 00000 ssssssssssssssss",
+                 //"000001 fffff 00000 ssssssssssssssss",
+                 "10110101 sssssssssssssssssss fffff",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -662,11 +752,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        }        
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("CBZ X1,label",
                   "Conditional branch zero : Branch to statement at label's address if X1 is zero",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
-                  "000001 fffff 00000 ssssssssssssssss",
+                 // "000001 fffff 00000 ssssssssssssssss",
+                 "10110100 sssssssssssssssssss fffff",
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -678,11 +770,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        }
                     }
                  }));
+
           instructionList.add(
                   new BasicInstruction("CBZ X1,-100", 
               	 "Conditional branch zero : If X1 is zero, jump a number of instructions forward equal to the specified immediate",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
-                 "000001 fffff 00000 ssssssssssssssss",
+                 //"000001 fffff 00000 ssssssssssssssss",
+                 "10110100 sssssssssssssssssss fffff",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -694,11 +789,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        }        
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.EQ target", 
               	 "Branch on Equal: Jump to statement at target address if Zero flag is true; flags=x1xx",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                  "01010100 fffffffffffffffffff 00000 ",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -706,17 +804,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+                                            //processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
           instructionList.add(
                   new BasicInstruction("B.NE target", 
               	 "Branch on NOT equal: Jump to statement at target address if Zero flag is false; flags=x0xx",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00001",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -724,17 +826,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.CS target", 
               	 "Branch on Carry Set: Jump to statement at target address if Carry flag is true; flags=xxx1",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00010",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -742,17 +849,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagC())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.HS target", 
               	 "Branch on Unsigned Higher/Same: Jump to statement at target address if Carry flag is true; flags=xxx1",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00010",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -760,17 +872,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagC())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.CC target", 
               	 "Branch on Carry Clear: Jump to statement at target address if Carry flag is false; flags=xxx0",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                  "01010100 fffffffffffffffffff 00011",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -778,17 +895,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagC())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.LO target", 
               	 "Branch on Unsigned Lower: Jump to statement at target address if Carry flag is false; flags=xxx0",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                "01010100 fffffffffffffffffff 00011",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -796,17 +918,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagC())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.MI target", 
               	 "Branch on Minus: Jump to statement at target address if Negative flag is true; flags=1xxx",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00100",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -814,17 +941,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagN())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.PL target", 
               	 "Branch on Plus: Jump to statement at target address if Negative flag is false; flags=0xxx",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00101",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -832,17 +964,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagN())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.VS target", 
               	 "Branch on Overflow: Jump to statement at target address if oVerflow flag is true; flags=xx1x",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00110",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -850,17 +987,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagV())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.VC target", 
               	 "Branch on No overflow: Jump to statement at target address if oVerflow flag is false; flags=xx0x",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                  "01010100 fffffffffffffffffff 00111",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -868,17 +1010,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagV())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.HI target", 
               	 "Branch on Unsigned Higher: Jump to statement at target address if Carry is true and Zero is false; flags=x0x1",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01000",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -886,17 +1033,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagC() && !RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.LS target", 
               	 "Branch on Unsigned Lower or Same: Jump to statement at target address if Carry is false or Zero is true; flags=xxx0||x1xx",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01001",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -904,17 +1056,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagC() || RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.GE target", 
               	 "Branch on Signed Greater Than/Equal: Jump to statement at target address if Negative and oVerflow have the same value; flags=1x1x||0x0x",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01010",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -922,17 +1079,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagN() == RegisterFile.flagV())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.GT target", 
               	 "Branch on Signed Greater Than: Jump to statement at target address if Negative and oVerflow have the same value, and Zero is false; flags=101x||000x",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01100",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -940,17 +1102,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if ((RegisterFile.flagN() == RegisterFile.flagV()) && !RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.LT target", 
               	 "Branch on Signed Less Than: Jump to statement at target address if Negative and oVerflow have different values; flags=1x0x||0x1x",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01011",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -958,17 +1125,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagN() != RegisterFile.flagV())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("B.LE target", 
               	 "Branch on Signed Less Than/Equal: Jump to statement at target address if Negative and oVerflow have different values, or if Zero is true; flags=1x0x||0x1x||x1xx",
-              	 BasicInstructionFormat.J_FORMAT,
-                  "000010 ffffffffffffffffffffffffff",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01101",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -976,17 +1148,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       	if ((RegisterFile.flagN() != RegisterFile.flagV()) || RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            processJump(
- 				               ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				                       | (operands[0] << 2)));
+ 				            //processJump(
+ 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
+ 				            //           | (operands[0] << 2)));
+//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
                      	}
                     }
                  }));
+          
          instructionList.add(
                 new BasicInstruction("SVC 0", 
             	 "Issue a system call : Execute the system call specified by value in X8",
               	 BasicInstructionFormat.J_FORMAT,
-                 "001100 ffffffffffffffffffffffffff",
+                 //"001100 ffffffffffffffffffffffffff",
+                 "11010100000 ffffffffffffffff 00001",
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -995,11 +1171,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      findAndSimulateSyscall(RegisterFile.getValue(8),statement);
                   }
                }));
+         
           instructionList.add(
-                 new BasicInstruction("LDXR X1,[X2,-100]",
+                 new BasicInstruction("LDXR X1,[X2]",
                  "Load Exclusive Register: Paired with Store Exclusive Register (STXR) to perform atomic read-modify-write.  Treated as equivalent to Load Register (LDUR) because AARS does not simulate multiple processors.",
              	 BasicInstructionFormat.I_FORMAT,
-                 "110000 ttttt fffff ssssssssssssssss",
+                 //"110000 ttttt fffff ssssssssssssssss",
+                 "11001000010 111110 11111  sssss fffff",        
              	 // The ll (load link) command is supposed to be the front end of an atomic
              	 // operation completed by sc (store conditional), with success or failure
              	 // of the store depending on whether the memory block containing the
@@ -1017,7 +1195,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       {
                          RegisterFile.updateRegister(operands[0],
                              Globals.memory.getWord(
-                             RegisterFile.getValue(operands[1]) + operands[2]));
+                             RegisterFile.getValue(operands[1]) ));//+ operands[2])); //Em ARMv8/LEGv8 essa instrução possui imediato sempre igual a zero. Alterar a execução no AARS que assume imediato qualquer
                       } 
                           catch (AddressErrorException e)
                          {
@@ -1025,11 +1203,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                          }
                    }
                 }));
+          
           instructionList.add(
                  new BasicInstruction("STXR X1,X3,[X2]",
                  "Store Exclusive Register: Paired with Load Exclusive Register (LDXR) to perform atomic read-modify-write.  Stores X1 value into the address in X2, then sets X3 to 0 for success.  Always succeeds because AARS does not simulate multiple processors.",
              	 BasicInstructionFormat.I_FORMAT,
-                 "111000 ttttt fffff ssssssssssssssss",
+                 //"111000 ttttt fffff ssssssssssssssss",
+                 "11001000000 ttttt 011111  sssss fffff",
              	 // See comments with "ll" instruction above.  "sc" is implemented
              	 // like "sw", except that 1 is placed in the source register.
                  new SimulationCode()
@@ -1050,11 +1230,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.updateRegister(operands[1],0); // always succeeds
                    }
                 }));
+          
           instructionList.add(
                   new BasicInstruction("LDUR X1, [X2,-100]",
               	 "Load word : Set X1 to contents of effective memory word address",
                   BasicInstructionFormat.I_FORMAT,
-                  "100011 ttttt fffff ssssssssssssssss",
+                  //"100011 ttttt fffff ssssssssssssssss",
+                 "11111000010 ttttt 011111  sssss fffff",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1072,11 +1255,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                           }
                     }
                  }));
+          
           instructionList.add(
                   new BasicInstruction("STUR X1,[X2,-100]",
                   "Store word : Store contents of X1 into effective memory word address",
               	 BasicInstructionFormat.I_FORMAT,
-                  "101011 ttttt fffff ssssssssssssssss",
+                 // "101011 ttttt fffff ssssssssssssssss",
+                 "11111000000 ttttttttt 00 sssss fffff",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1127,11 +1313,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       RegisterFile.updateRegister(operands[0], imm16 << lsl);
                    }
                 }));
+          
           instructionList.add(
                   new BasicInstruction("MOVK X1,100,LSL 0",
                   "Move wide with keep: Set 16 bits of X1 to 16-bit immediate and keep the rest. Placement is determined by LSL; valid inputs 0-3. Currently ignores the MSB of LSL.",
               	 BasicInstructionFormat.I_FORMAT,
-                  "001111 ttttt fffff ssssssssssssssss",
+                  //"001111 ttttt fffff ssssssssssssssss",
+                  "111100101 tt ssssssssssssssss fffff",
+                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1150,31 +1339,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        RegisterFile.updateRegister(operands[0], result);
                     }
                  }));
-          instructionList.add(
-                  new BasicInstruction("MOVZ X1,100,0",
-                  "Move wide with zero: Set 16 bits of X1 to 16-bit immediate and zero the rest. Placement is determined by LSL; valid inputs 0-3. Currently ignores the MSB of LSL.",
-              	 BasicInstructionFormat.I_FORMAT,
-                  "001111 ttttt fffff ssssssssssssssss",
-                  new SimulationCode()
-                 {
-                     public void simulate(ProgramStatement statement) throws ProcessingException
-                    {
-                       int[] operands = statement.getOperands();
-                       // data validation for LSL
-                       if (operands[2]>3) {
-                           throw new ProcessingException(statement, "Invalid value for LSL");
-                        }
-                       // TODO: this will need adjustment for 64bit
-                       int imm16 = operands[1] << 16 >> 16;
-                       int lsl = (operands[2] << 31 >> 31)*16; // LSL denotes which halfword to shift the value into
-                       RegisterFile.updateRegister(operands[0], imm16 << lsl);
-                    }
-                 }));
+                    
            instructionList.add(
                    new BasicInstruction("MOVK X1,100,0",
                    "Move wide with keep: Set 16 bits of X1 to 16-bit immediate and keep the rest. Placement is determined by LSL; valid inputs 0-3. Currently ignores the MSB of LSL.",
                	 BasicInstructionFormat.I_FORMAT,
-                   "001111 ttttt fffff ssssssssssssssss",
+                   //"001111 ttttt fffff ssssssssssssssss",
+                   "111100101 tt ssssssssssssssss fffff",
+                           
                    new SimulationCode()
                   {
                       public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1193,11 +1365,63 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         RegisterFile.updateRegister(operands[0], result);
                      }
                   }));
+           
+           
+          instructionList.add(
+                  new BasicInstruction("MOVZ X1,100,LSL 0",
+                  "Move wide with zero: Set 16 bits of X1 to 16-bit immediate and zero the rest. Placement is determined by LSL; valid inputs 0-3. Currently ignores the MSB of LSL.",
+              	 BasicInstructionFormat.I_FORMAT,
+                 // "001111 ttttt fffff ssssssssssssssss",
+                 "110100101 tt ssssssssssssssss fffff",
+                          
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                       int[] operands = statement.getOperands();
+                       // data validation for LSL
+                       if (operands[2]>3) {
+                           throw new ProcessingException(statement, "Invalid value for LSL");
+                        }
+                       // TODO: this will need adjustment for 64bit
+                       int imm16 = operands[1] << 16 >> 16;
+                       int lsl = (operands[2] << 31 >> 31)*16; // LSL denotes which halfword to shift the value into
+                       RegisterFile.updateRegister(operands[0], imm16 << lsl);
+                    }
+                 }));
+
+          
+            instructionList.add(
+                  new BasicInstruction("MOVZ X1,100,0",
+                  "Move wide with zero: Set 16 bits of X1 to 16-bit immediate and zero the rest. Placement is determined by LSL; valid inputs 0-3. Currently ignores the MSB of LSL.",
+              	 BasicInstructionFormat.I_FORMAT,
+                 // "001111 ttttt fffff ssssssssssssssss",
+                 "110100101 tt ssssssssssssssss fffff",
+                          
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                       int[] operands = statement.getOperands();
+                       // data validation for LSL
+                       if (operands[2]>3) {
+                           throw new ProcessingException(statement, "Invalid value for LSL");
+                        }
+                       // TODO: this will need adjustment for 64bit
+                       int imm16 = operands[1] << 16 >> 16;
+                       int lsl = (operands[2] << 31 >> 31)*16; // LSL denotes which halfword to shift the value into
+                       RegisterFile.updateRegister(operands[0], imm16 << lsl);
+                    }
+                 }));
+
+         
          instructionList.add(
                  new BasicInstruction("LDURB X1,[X2,-100]",
         		 "Load byte unsigned : Set X1 to zero-extended 8-bit value from effective memory byte address",
         		 BasicInstructionFormat.I_FORMAT,
-        		 "100100 ttttt fffff ssssssssssssssss",
+        		 //"100100 ttttt fffff ssssssssssssssss",
+                         "00111000010 ttttttttt 00 sssss fffff",
+                         
         		 new SimulationCode()
         		{
         		    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1217,11 +1441,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         		         }
         		   }
         		}));
+         
          instructionList.add(
                  new BasicInstruction("LDURH X1,[X2,-100]",
         	     "Load halfword unsigned : Set X1 to zero-extended 16-bit value from effective memory halfword address",
         	   	 BasicInstructionFormat.I_FORMAT,
-        	     "100101 ttttt fffff ssssssssssssssss",
+        	     //"100101 ttttt fffff ssssssssssssssss",
+                    "01111000010 ttttttttt 00 sssss fffff",
+                         
         	     new SimulationCode()
         	    {
         	        public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1242,11 +1469,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         	             }
         	       }
         	    }));
+         
          instructionList.add(
                  new BasicInstruction("STURB X1,[X2,-100]",
                 "Store byte : Store the low-order 8 bits of X1 into the effective memory byte address",
             	 BasicInstructionFormat.I_FORMAT,
-                "101000 ttttt fffff ssssssssssssssss",
+                //"101000 ttttt fffff ssssssssssssssss",
+                "00111000000 ttttttttt 00 sssss fffff",
+                         
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1266,11 +1496,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                         }
                   }
                }));
+         
          instructionList.add(
                  new BasicInstruction("STURH X1,[X2,-100]",
                 "Store halfword : Store the low-order 16 bits of X1 into the effective memory halfword address",
             	 BasicInstructionFormat.I_FORMAT,
-                "101001 ttttt fffff ssssssssssssssss",
+                //"101001 ttttt fffff ssssssssssssssss",
+                "01111000000 ttttttttt 00 sssss fffff",
+                         
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1296,7 +1529,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                 new BasicInstruction("FADDS S0,S1,S3",
                 "Floating point addition single precision : Set S0 to single-precision floating point value of S1 plus S3", 
             	 BasicInstructionFormat.R_FORMAT,
-                "010001 10000 ttttt sssss fffff 000000",
+                //"010001 10000 ttttt sssss fffff 000000",
+                "00011110001 ttttt 001010 sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1314,11 +1549,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Coprocessor1.updateRegister(operands[0], Float.floatToIntBits(sum));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("FSUBS S0,S1,S3",
                 "Floating point subtraction single precision : Set S0 to single-precision floating point value of S1  minus S3",
             	 BasicInstructionFormat.R_FORMAT,
-                "010001 10000 ttttt sssss fffff 000001",
+                //"010001 10000 ttttt sssss fffff 000001",
+                "00011110001 ttttt 001110 sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1330,11 +1568,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Coprocessor1.updateRegister(operands[0], Float.floatToIntBits(diff));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("FMULS S0,S1,S3",
                 "Floating point multiplication single precision : Set S0 to single-precision floating point value of S1 times S3",
             	 BasicInstructionFormat.R_FORMAT,
-                "010001 10000 ttttt sssss fffff 000010",
+                //"010001 10000 ttttt sssss fffff 000010",
+                "00011110001 ttttt 000010 sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1346,11 +1587,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Coprocessor1.updateRegister(operands[0], Float.floatToIntBits(prod));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("FDIVS S0,S1,S3",
                 "Floating point division single precision : Set S0 to single-precision floating point value of S1 divided by S3",
             	 BasicInstructionFormat.R_FORMAT,
-                "010001 10000 ttttt sssss fffff 000011",
+                //"010001 10000 ttttt sssss fffff 000011",
+                "00011110001 ttttt 000110 sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1362,11 +1606,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Coprocessor1.updateRegister(operands[0], Float.floatToIntBits(quot));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("FADDD D0,D1,D2",
             	 "Floating point addition double precision : Set D2 to double-precision floating point value of D4 plus D6",
             	 BasicInstructionFormat.R_FORMAT,
-                "010001 10001 ttttt sssss fffff 000000",
+                //"010001 10001 ttttt sssss fffff 000000",
+                "00011110011 ttttt 001010 sssss fffff",
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1385,11 +1631,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Coprocessor1.updateRegister(operands[0], Binary.lowOrderLongToInt(longSum));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("FSUBD D2,D4,D6",
             	 "Floating point subtraction double precision : Set D2 to double-precision floating point value of D4 minus D6",
                 BasicInstructionFormat.R_FORMAT,
-                "010001 10001 ttttt sssss fffff 000001",
+                //"010001 10001 ttttt sssss fffff 000001",
+                "00011110011 ttttt 001110 sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1408,11 +1657,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Coprocessor1.updateRegister(operands[0], Binary.lowOrderLongToInt(longDiff));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("FMULD D2,D4,D6",
             	 "Floating point multiplication double precision : Set D2 to double-precision floating point value of D4 times D6",
                 BasicInstructionFormat.R_FORMAT,
-                "010001 10001 ttttt sssss fffff 000010",
+                //"010001 10001 ttttt sssss fffff 000010",
+                "00011110011 ttttt 000010 sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1431,11 +1683,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Coprocessor1.updateRegister(operands[0], Binary.lowOrderLongToInt(longProd));
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("FDIVD D2,D4,D6",
             	 "Floating point division double precision : Set D2 to double-precision floating point value of D4 divided by D6",
                 BasicInstructionFormat.R_FORMAT,
-                "010001 10001 ttttt sssss fffff 000011",
+                //"010001 10001 ttttt sssss fffff 000011",
+                "00011110011 ttttt 000110 sssss fffff",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1454,11 +1709,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      Coprocessor1.updateRegister(operands[0], Binary.lowOrderLongToInt(longQuot));
                   }
                }));
+         
          instructionList.add(
                  new BasicInstruction("LDURS S1, [X2,-100]",
                  "Load Floating Point Single : Set S1 to 32-bit value from effective memory word address",
              	 BasicInstructionFormat.I_FORMAT,
-                 "110001 ttttt fffff ssssssssssssssss",
+                 //"110001 ttttt fffff ssssssssssssssss",
+                 "10111100010 ttttttttt 00 sssss fffff",
+                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1475,12 +1733,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                             throw new ProcessingException(statement, e);
                          }
                    }
-                }));		 
+                }));	
+         
           instructionList.add(
                   new BasicInstruction("LDURD D1, [X2,-100]",
              	 "Load Floating Point Double : Set D1 to 64-bit value from effective memory doubleword address",
                  BasicInstructionFormat.I_FORMAT,
-                 "110101 ttttt fffff ssssssssssssssss",
+                 //"110101 ttttt fffff ssssssssssssssss",
+                 "11111100010 ttttttttt 00 sssss fffff",
+                          
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1511,11 +1772,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                          }
                    }
                 }));	 
+          
           instructionList.add(
                   new BasicInstruction("STURS S1, [X2,-100]",
              	 "Store Floating Point Single : Store 32 bit value in S1 to effective memory word address",
                  BasicInstructionFormat.I_FORMAT,
-                 "111001 ttttt fffff ssssssssssssssss",
+                 //"111001 ttttt fffff ssssssssssssssss",
+                 "10111100000 ttttttttt 00 sssss fffff",
+                          
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1533,11 +1797,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                          }
                    }
                 }));
+          
           instructionList.add(
                   new BasicInstruction("STURD D1, [X2,-100]",
              	 "Store Floating Point Double : Store 64 bit value in D1 to effective memory doubleword address",
                  BasicInstructionFormat.I_FORMAT,
-                 "111101 ttttt fffff ssssssssssssssss",
+                 //"111101 ttttt fffff ssssssssssssssss",
+                "11111100000 ttttttttt 00 sssss fffff",
+                          
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1567,11 +1834,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                          }
                    }
                 }));
+          
          instructionList.add(
                 new BasicInstruction("FCMPS S0,S1",
                 "Floating point compare single : If equal, flags=0110. If less than, flags=1000. If greater than, flags=0010. If either operand is invalid, flags=0001.",
             	BasicInstructionFormat.R_FORMAT,
-                "010001 10000 sssss fffff 00000 110010",
+                //"010001 10000 sssss fffff 00000 110010",
+                "00011110001sssss001000fffff00000",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1599,11 +1869,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      }
                   }
                }));
+         
          instructionList.add(
                 new BasicInstruction("FCMPD D0,D1",
                 "Floating point compare double : If equal, flags=0110. If less than, flags=1000. If greater than, flags=0010. If either operand is invalid, flags=0001.",
                 BasicInstructionFormat.R_FORMAT,
-                "010001 10001 sssss fffff 00000 110010",
+                //"010001 10001 sssss fffff 00000 110010",
+                "00011110011sssss001000fffff00000",
+                        
                 new SimulationCode()
                {
                    public void simulate(ProgramStatement statement) throws ProcessingException

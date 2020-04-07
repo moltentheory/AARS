@@ -131,7 +131,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   int k1 = 31 - j;
                   int opand = (binaryStatement >> k0) & ((1 << (k1 - k0 + 1)) - 1);
                   if (instrFormat.equals(BasicInstructionFormat.I_BRANCH_FORMAT) && numOps == 2) {
-                     opand = opand << 16 >> 16;
+                     opand = opand << 19 >> 19; // << 16 >> 16; para ARM
                   } 
                   else if (instrFormat.equals(BasicInstructionFormat.J_FORMAT) && numOps == 0) {
                      opand |= (textAddress >> 2) & 0x3C000000;
@@ -235,7 +235,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   BasicInstructionFormat format = ((BasicInstruction)instruction).getInstructionFormat();
                   if (format ==  BasicInstructionFormat.I_BRANCH_FORMAT) {
                      //address = (address - (this.textAddress+((Globals.getSettings().getDelayedBranchingEnabled())? Instruction.INSTRUCTION_LENGTH : 0))) >> 2;
-                     address = (address - (this.textAddress+Instruction.INSTRUCTION_LENGTH)) >> 2;
+                     //address = (address - (this.textAddress+Instruction.INSTRUCTION_LENGTH)) >> 2;
+                     address = (address - this.textAddress); // para ARM
                      absoluteAddress = false;
                   }
                }
@@ -345,6 +346,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          BasicInstructionFormat format = ((BasicInstruction)instruction).getInstructionFormat();
       
          if (format == BasicInstructionFormat.J_FORMAT) {
+             /*
             if ((this.textAddress & 0xF0000000) != (this.operands[0] & 0xF0000000)) {
                // attempt to jump beyond 28-bit byte (26-bit word) address range. 
             	// SPIM flags as warning, I'll flag as error b/c MARS text segment not long enough for it to be OK.
@@ -352,9 +354,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                           "Jump target word address beyond 26-bit range"));
                return;
             }
+             */ // Retirei
             // Note the  bit shift to make this a word address.
-            this.operands[0] = this.operands[0] >>> 2;
-            this.insertBinaryCode(this.operands[0], Instruction.operandMask[0], errors);          
+            //this.operands[0] = this.operands[0] >>> 2;   // para ARM
+            //this.insertBinaryCode(this.operands[0], Instruction.operandMask[0], errors);
+            this.insertBinaryCode((this.operands[0]-this.textAddress)>>>2, Instruction.operandMask[0], errors);
          } 
          else if (format == BasicInstructionFormat.I_BRANCH_FORMAT) { 
             for (int i=0; i<this.numOperands-1; i++) {

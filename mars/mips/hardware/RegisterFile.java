@@ -377,6 +377,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		for (int i = 0; i < regFile.length; i++) {
 			regFile[i].resetValue();
 		}
+                flagN = false;
+                flagZ = false;
+                flagV = false;
+                flagC = false;
 		initializeProgramCounter(Globals.getSettings().getStartAtMain());// replaces
 																			// "programCounter.resetValue()",
 																			// DPS
