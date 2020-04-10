@@ -122,7 +122,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
              	 "Add and set flags : set X1 to (X2 plus X3), and set the processor flags",
                  BasicInstructionFormat.R_FORMAT,
                  //"000000 sssss ttttt fffff 00000 100000",
-                "101010 11001 ttttt 000000  sssss fffff",
+                "101010 11000 ttttt 000000  sssss fffff",
                          
                  new SimulationCode()
                 {
@@ -1195,7 +1195,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       {
                          RegisterFile.updateRegister(operands[0],
                              Globals.memory.getWord(
-                             RegisterFile.getValue(operands[1]) ));//+ operands[2])); //Em ARMv8/LEGv8 essa instrução possui imediato sempre igual a zero. Alterar a execução no AARS que assume imediato qualquer
+                             RegisterFile.getValue(operands[1]) ));//+ operands[2])); //Em ARMv8/LEGv8 essa instruï¿½ï¿½o possui imediato sempre igual a zero. Alterar a execuï¿½ï¿½o no AARS que assume imediato qualquer
                       } 
                           catch (AddressErrorException e)
                          {
