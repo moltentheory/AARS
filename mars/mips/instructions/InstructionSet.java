@@ -734,7 +734,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     }
                  }));
 
-          instructionList.add(
+          /*instructionList.add(
                   new BasicInstruction("CBNZ X1,-100", 
               	 "Conditional branch not zero : If X1 is NOT zero, jump a number of instructions forward equal to the specified immediate",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
@@ -752,7 +752,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        }        
                     }
                  }));
-          
+          */
           instructionList.add(
                   new BasicInstruction("CBZ X1,label",
                   "Conditional branch zero : Branch to statement at label's address if X1 is zero",
@@ -771,7 +771,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     }
                  }));
 
-          instructionList.add(
+          /*instructionList.add(
                   new BasicInstruction("CBZ X1,-100", 
               	 "Conditional branch zero : If X1 is zero, jump a number of instructions forward equal to the specified immediate",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
@@ -788,7 +788,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                     	   processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
                        }        
                     }
-                 }));
+                 }));*/
           
           instructionList.add(
                   new BasicInstruction("B.EQ target", 
