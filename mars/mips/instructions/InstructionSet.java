@@ -1071,6 +1071,295 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	}
                     }
                  }));
+          
+          // Start of flag-dependant branches to number of instructions
+          instructionList.add(
+                  new BasicInstruction("B.EQ -100", 
+              	 "Branch on Equal: Jump a number of instructions forward equal to the specified immediate if Zero flag is true; flags=x1xx",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                  "01010100 fffffffffffffffffff 00000 ",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (RegisterFile.flagZ())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          instructionList.add(
+                  new BasicInstruction("B.NE -100", 
+              	 "Branch on NOT equal: Jump a number of instructions forward equal to the specified immediate if Zero flag is false; flags=x0xx",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00001",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (!RegisterFile.flagZ())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.CS -100", 
+              	 "Branch on Carry Set: Jump a number of instructions forward equal to the specified immediate if Carry flag is true; flags=xxx1",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00010",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (RegisterFile.flagC())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.HS -100", 
+              	 "Branch on Unsigned Higher/Same: Jump a number of instructions forward equal to the specified immediate if Carry flag is true; flags=xxx1",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00010",    
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (RegisterFile.flagC())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.CC -100", 
+              	 "Branch on Carry Clear: Jump a number of instructions forward equal to the specified immediate if Carry flag is false; flags=xxx0",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                  "01010100 fffffffffffffffffff 00011",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (!RegisterFile.flagC())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.LO -100", 
+              	 "Branch on Unsigned Lower: Jump a number of instructions forward equal to the specified immediate if Carry flag is false; flags=xxx0",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                "01010100 fffffffffffffffffff 00011",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (!RegisterFile.flagC())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.MI -100", 
+              	 "Branch on Minus: Jump a number of instructions forward equal to the specified immediate if Negative flag is true; flags=1xxx",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00100",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (RegisterFile.flagN())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.PL -100", 
+              	 "Branch on Plus: Jump a number of instructions forward equal to the specified immediate if Negative flag is false; flags=0xxx",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00101",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (!RegisterFile.flagN())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				           processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.VS -100", 
+              	 "Branch on Overflow: Jump a number of instructions forward equal to the specified immediate if oVerflow flag is true; flags=xx1x",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 00110",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (RegisterFile.flagV())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.VC -100", 
+              	 "Branch on No overflow: Jump a number of instructions forward equal to the specified immediate if oVerflow flag is false; flags=xx0x",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                  "01010100 fffffffffffffffffff 00111",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (!RegisterFile.flagV())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.HI -100", 
+              	 "Branch on Unsigned Higher: Jump a number of instructions forward equal to the specified immediate if Carry is true and Zero is false; flags=x0x1",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01000",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (RegisterFile.flagC() && !RegisterFile.flagZ())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.LS -100", 
+              	 "Branch on Unsigned Lower or Same: Jump a number of instructions forward equal to the specified immediate if Carry is false or Zero is true; flags=xxx0||x1xx",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01001",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (!RegisterFile.flagC() || RegisterFile.flagZ())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.GE -100", 
+              	 "Branch on Signed Greater Than/Equal: Jump a number of instructions forward equal to the specified immediate if Negative and oVerflow have the same value; flags=1x1x||0x0x",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01010",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (RegisterFile.flagN() == RegisterFile.flagV())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.GT -100", 
+              	 "Branch on Signed Greater Than: Jump a number of instructions forward equal to the specified immediate if Negative and oVerflow have the same value, and Zero is false; flags=101x||000x",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                 // "000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01100",  
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if ((RegisterFile.flagN() == RegisterFile.flagV()) && !RegisterFile.flagZ())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.LT -100", 
+              	 "Branch on Signed Less Than: Jump a number of instructions forward equal to the specified immediate if Negative and oVerflow have different values; flags=1x0x||0x1x",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01011",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                     	if (RegisterFile.flagN() != RegisterFile.flagV())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				           processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
+          instructionList.add(
+                  new BasicInstruction("B.LE -100", 
+              	 "Branch on Signed Less Than/Equal: Jump a number of instructions forward equal to the specified immediate if Negative and oVerflow have different values, or if Zero is true; flags=1x0x||0x1x||x1xx",
+              	 BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                 "01010100 fffffffffffffffffff 01101",
+                  new SimulationCode()
+                 {
+                     public void simulate(ProgramStatement statement) throws ProcessingException
+                    {
+                      	if ((RegisterFile.flagN() != RegisterFile.flagV()) || RegisterFile.flagZ())
+                     	{
+ 				            int[] operands = statement.getOperands();
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
+                     	}
+                    }
+                 }));
+          
           // End of conditional branch instructions
           
           
