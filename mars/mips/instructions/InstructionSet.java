@@ -650,33 +650,29 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   BasicInstructionFormat.I_BRANCH_FORMAT,
                   //"000010 ffffffffffffffffffffffffff",
                   "01010100 fffffffffffffffffff 01111 ",
-        
-                         
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
                    {
                       int[] operands = statement.getOperands();
-                      processJump(RegisterFile.getProgramCounter()+operands[0]-4);
-                      //processJump(operands[0]);
-                       //  ((RegisterFile.getProgramCounter() & 0xF0000000)
-                       //          | (operands[0] << 2)));            
+                      processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                    }
                 }));
-/*
+         
          instructionList.add(
                  new BasicInstruction("B.AL -100", 
-             	 "Branch unconditionally : Jump a number of instructions forward equal to the specified immediate",
-             	 BasicInstructionFormat.J_FORMAT,
-                 "000101 ffffffffffffffffffffffffff",
+             	 "Branch always : Jump a number of instructions forward equal to the specified immediate",
+                  BasicInstructionFormat.I_BRANCH_FORMAT,
+                  //"000010 ffffffffffffffffffffffffff",
+                  "01010100 fffffffffffffffffff 01111 ",
                  new SimulationCode()
                 {
                     public void simulate(ProgramStatement statement) throws ProcessingException
                    {
                       int[] operands = statement.getOperands();
-                      processJump(RegisterFile.getProgramCounter() + (operands[0]*4)-4);            
+                      processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address          
                    }
-                }));*/
+                }));
 
           instructionList.add(
                  new BasicInstruction("BL target",
@@ -729,18 +725,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        int[] operands = statement.getOperands();
                        if (RegisterFile.getValue(operands[0]) != 0)
                        {
-                          processBranch(operands[1]);
+                          processBranch(operands[1]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                        }
                     }
                  }));
 
-          /*instructionList.add(
+          instructionList.add(
                   new BasicInstruction("CBNZ X1,-100", 
               	 "Conditional branch not zero : If X1 is NOT zero, jump a number of instructions forward equal to the specified immediate",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  //"000001 fffff 00000 ssssssssssssssss",
                  "10110101 sssssssssssssssssss fffff",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -748,11 +743,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        int[] operands = statement.getOperands();
                        if (RegisterFile.getValue(operands[0]) != 0)
                        {
-                    	   processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                    	  processBranch(operands[1]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                        }        
                     }
                  }));
-          */
+          
           instructionList.add(
                   new BasicInstruction("CBZ X1,label",
                   "Conditional branch zero : Branch to statement at label's address if X1 is zero",
@@ -766,18 +761,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        int[] operands = statement.getOperands();
                        if (RegisterFile.getValue(operands[0]) == 0)
                        {
-                          processBranch(operands[1]);
+                    	  processBranch(operands[1]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                        }
                     }
                  }));
 
-          /*instructionList.add(
+          instructionList.add(
                   new BasicInstruction("CBZ X1,-100", 
               	 "Conditional branch zero : If X1 is zero, jump a number of instructions forward equal to the specified immediate",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  //"000001 fffff 00000 ssssssssssssssss",
                  "10110100 sssssssssssssssssss fffff",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -785,18 +779,18 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                        int[] operands = statement.getOperands();
                        if (RegisterFile.getValue(operands[0]) == 0)
                        {
-                    	   processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
+                    	   processBranch(operands[1]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                        }        
                     }
-                 }));*/
+                 }));
           
+          // Start of flag-dependant branches to label
           instructionList.add(
                   new BasicInstruction("B.EQ target", 
               	 "Branch on Equal: Jump to statement at target address if Zero flag is true; flags=x1xx",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                   //"000010 ffffffffffffffffffffffffff",
                   "01010100 fffffffffffffffffff 00000 ",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -804,11 +798,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-                                            //processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -818,7 +808,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 00001",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -826,11 +815,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -841,7 +826,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 00010",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -849,11 +833,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagC())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -863,8 +843,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 "Branch on Unsigned Higher/Same: Jump to statement at target address if Carry flag is true; flags=xxx1",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
-                 "01010100 fffffffffffffffffff 00010",
-                          
+                 "01010100 fffffffffffffffffff 00010",    
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -872,11 +851,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagC())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -887,7 +862,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                   //"000010 ffffffffffffffffffffffffff",
                   "01010100 fffffffffffffffffff 00011",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -895,11 +869,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagC())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -910,7 +880,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
                 "01010100 fffffffffffffffffff 00011",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -918,11 +887,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagC())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -933,7 +898,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 00100",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -941,11 +905,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagN())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -956,7 +916,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 00101",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -964,11 +923,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagN())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				           processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -979,7 +934,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 00110",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -987,11 +941,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagV())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -1002,7 +952,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                   //"000010 ffffffffffffffffffffffffff",
                   "01010100 fffffffffffffffffff 00111",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1010,11 +959,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagV())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -1025,7 +970,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 01000",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1033,11 +977,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagC() && !RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -1048,7 +988,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 01001",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1056,11 +995,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (!RegisterFile.flagC() || RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -1071,7 +1006,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                   //"000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 01010",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1079,11 +1013,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagN() == RegisterFile.flagV())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -1093,8 +1023,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 "Branch on Signed Greater Than: Jump to statement at target address if Negative and oVerflow have the same value, and Zero is false; flags=101x||000x",
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                  // "000010 ffffffffffffffffffffffffff",
-                 "01010100 fffffffffffffffffff 01100",
-                          
+                 "01010100 fffffffffffffffffff 01100",  
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1102,11 +1031,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if ((RegisterFile.flagN() == RegisterFile.flagV()) && !RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -1117,7 +1042,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                   //"000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 01011",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1125,11 +1049,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      	if (RegisterFile.flagN() != RegisterFile.flagV())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				           processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
@@ -1140,7 +1060,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
               	 BasicInstructionFormat.I_BRANCH_FORMAT,
                   //"000010 ffffffffffffffffffffffffff",
                  "01010100 fffffffffffffffffff 01101",
-                          
                   new SimulationCode()
                  {
                      public void simulate(ProgramStatement statement) throws ProcessingException
@@ -1148,14 +1067,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                       	if ((RegisterFile.flagN() != RegisterFile.flagV()) || RegisterFile.flagZ())
                      	{
  				            int[] operands = statement.getOperands();
- 				            //processJump(
- 				            //   ((RegisterFile.getProgramCounter() & 0xF0000000)
- 				            //           | (operands[0] << 2)));
-//                                            processJump(RegisterFile.getProgramCounter() + (operands[1]*4)-4);
-                                            processJump(RegisterFile.getProgramCounter()+operands[0]-4);
+ 				            processBranch(operands[0]); //Gabriel: now uses the correct jump function for branches, based on a relative address
                      	}
                     }
                  }));
+          // End of conditional branch instructions
+          
           
          instructionList.add(
                 new BasicInstruction("SVC 0", 
@@ -2045,7 +1962,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             // Decrement needed because PC has already been incremented
             RegisterFile.setProgramCounter(
                 RegisterFile.getProgramCounter()
-                  + (displacement << 2)); // - Instruction.INSTRUCTION_LENGTH);	
+                  + (displacement << 2) - Instruction.INSTRUCTION_LENGTH);
+            // Gabriel: now correctly executes branching using a relative address
+            // 			ie. number of instructions to jump
          }	 
       }
    

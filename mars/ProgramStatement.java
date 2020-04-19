@@ -236,7 +236,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                   if (format ==  BasicInstructionFormat.I_BRANCH_FORMAT) {
                      //address = (address - (this.textAddress+((Globals.getSettings().getDelayedBranchingEnabled())? Instruction.INSTRUCTION_LENGTH : 0))) >> 2;
                      //address = (address - (this.textAddress+Instruction.INSTRUCTION_LENGTH)) >> 2;
-                     address = (address - this.textAddress); // para ARM
+                     address = (address - this.textAddress) >> 2; // para ARM
                      absoluteAddress = false;
                   }
                }
