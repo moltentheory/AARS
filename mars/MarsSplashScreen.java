@@ -59,7 +59,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 			// loading so the Image object doesn't know how big it is.
 			// So observers are involved -- see the API.
          int width = 390;
-         int height =215;
+         int height = 215;
          Toolkit tk = Toolkit.getDefaultToolkit();
          Dimension screen = tk.getScreenSize();
          int x = (screen.width-width)/2;
@@ -67,19 +67,18 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          setBounds(x,y,width,height);
          
          // Build the splash screen
-         JLabel title = new JLabel("MARS: Mips Assembler and Runtime Simulator", JLabel.CENTER);      
-         JLabel copyrt1 = new JLabel
-               ("<html><br><br>Version "+Globals.version+" Copyright (c) "+Globals.copyrightYears+"</html>", JLabel.CENTER);
-         JLabel copyrt2 = new JLabel
-               ("<html><br><br>"+Globals.copyrightHolders+"</html>", JLabel.CENTER);
-         title.setFont(new Font("Sans-Serif", Font.BOLD, 16));
-         title.setForeground(Color.black);
+         JLabel title = new JLabel("<html><p style='text-align: center; margin-top:5px; font-size: 20px'>AARS</p><p>ARMv8 Assembler and Runtime Simulator</p></html>", JLabel.CENTER);
+         JLabel copyrt1 = new JLabel("<html><br><br><br><br><p style='text-align: center;'>Version "+Globals.version+" (ARMv8 port)</p></html>", JLabel.CENTER);
+         JLabel copyrt2 = new JLabel("<html><p style='text-align: center;'>"+Globals.copyrightHolders+"</p></html>", JLabel.CENTER);
+         
+         title.setFont(new Font("Sans-Serif", Font.BOLD, 18));
+         title.setForeground(Color.white);
          copyrt1.setFont(new Font("Sans-Serif", Font.BOLD, 14));
          copyrt2.setFont(new Font("Sans-Serif", Font.BOLD, 14));
          copyrt1.setForeground(Color.white);
          copyrt2.setForeground(Color.white);
 
-			content.add(title,BorderLayout.NORTH);
+		content.add(title,BorderLayout.NORTH);
 			content.add(copyrt1,BorderLayout.CENTER);
 			content.add(copyrt2,BorderLayout.SOUTH);
 
