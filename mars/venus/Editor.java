@@ -151,7 +151,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    	 */
        public String getNextDefaultFilename() {
          newUsageCount++;
-         return "mips"+newUsageCount+".asm";
+         return "arm"+newUsageCount+".asm";
       }
     
    

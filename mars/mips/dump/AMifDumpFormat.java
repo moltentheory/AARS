@@ -42,7 +42,9 @@ public class AMifDumpFormat extends AbstractDumpFormat {
             throws AddressErrorException, IOException {
         
         String[] fileNames ={file+"_text.mif", file+"_data.mif"};//, file+"ktext.mif", file+"kdata.mif"};
-        int[] sizes={16384,32768,2048,1024}; // Pré-defined DE2-70 Size of memory blocks in Words
+        int[] widths = {32,64};
+        //int[] sizes={16384,32768,2048,1024}; // Pré-defined DE2-70 Size of memory blocks in Words
+        int[] sizes={16384,16384,2048,1024}; // Adjusted for AARS, since data width is 64bits, depth is halved
         int[] addrs={
             Memory.textBaseAddress, 
             Memory.dataBaseAddress,
@@ -57,7 +59,8 @@ public class AMifDumpFormat extends AbstractDumpFormat {
         try {
             string = "DEPTH = " + Integer.toString(sizes[tipo]) + ";";
             out.println(string);
-            out.println("WIDTH = 32;");
+            string = "WIDTH = " + Integer.toString(widths[tipo]) + ";";
+            out.println(string);
             out.println("ADDRESS_RADIX = HEX;");
             out.println("DATA_RADIX = HEX;");
             out.println("CONTENT");
@@ -67,20 +70,48 @@ public class AMifDumpFormat extends AbstractDumpFormat {
                 if (temp == null)
                     break;
 
-                String addr = Integer.toHexString(waddr);
-                while (addr.length() < 8) {
-                    addr = '0' + addr;
+                // Gambiarra warning - _data.mif deve extender o bit mais significativo
+                if(tipo == 0)
+                {
+                	String addr = Integer.toHexString(waddr);
+                    while (addr.length() < widths[tipo]/4) {
+                        addr = '0' + addr;
+                    }
+                    
+                    String data = Integer.toHexString(temp);
+                    while (data.length() < widths[tipo]/4) {
+                        data = '0' + data;
+                    }
+                    
+                    string = addr + " : " + data + ";";
+                    if (tipo==0 || tipo==2) {
+                        ProgramStatement ps = Globals.memory.getStatement(address);
+                        string += "   % " + ps.getSourceLine() + ": " + ps.getSource()+" %";
+                    }
                 }
-                
-                String data = Integer.toHexString(temp);
-                while (data.length() < 8) {
-                    data = '0' + data;
-                }
-                
-                string = addr + " : " + data + ";";
-                if (tipo==0 || tipo==2) {
-                    ProgramStatement ps = Globals.memory.getStatement(address);
-                    string += "   % " + ps.getSourceLine() + ": " + ps.getSource()+" %";
+                else if(tipo == 1) {
+                	String addr = Integer.toHexString(waddr);
+                    while (addr.length() < widths[tipo]/4) {
+                        addr = '0' + addr;
+                    }
+                    
+                    String data = Integer.toHexString(temp);
+                    if(temp < 0) {
+                        while (data.length() < widths[tipo]/4) {
+                            data = 'f' + data;
+                        }
+                    }
+                    else {
+                        while (data.length() < widths[tipo]/4) {
+                            data = '0' + data;
+                        }
+                    } // como e complemento de 1 os bytes de espacamento devem ser compostos de F 
+
+                    string = addr + " : " + data + ";";
+                    if (tipo==0 || tipo==2) {
+                        ProgramStatement ps = Globals.memory.getStatement(address);
+                        string += "   % " + ps.getSourceLine() + ": " + ps.getSource()+" %";
+                    }
                 }
                 out.println(string);
             }

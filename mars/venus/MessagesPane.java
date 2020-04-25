@@ -165,7 +165,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          runTab.add(createBoxForButton(runTabClearButton),BorderLayout.WEST);
          runTab.add(new JScrollPane(run, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, 
                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);				
-         this.addTab("Mars Messages", assembleTab);
+         this.addTab("Aars Messages", assembleTab);
          this.addTab("Run I/O", runTab);
          this.setToolTipTextAt(0,"Messages produced by Run menu. Click on assemble error message to select erroneous line");
          this.setToolTipTextAt(1,"Simulated MIPS console input and output");
