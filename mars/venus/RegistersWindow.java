@@ -82,20 +82,26 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    	
        public Object[][] setupWindow(){
          int valueBase = NumberDisplayBaseChooser.getBase(settings.getDisplayValuesInHex());
-         tableData = new Object[34][3];
+         tableData = new Object[66][3]; //was hardcoded to 34 -> 66 ; added 32 registers
          registers = RegisterFile.getRegisters();
          for(int i=0; i< registers.length; i++){
             tableData[i][0]= registers[i].getName();
             tableData[i][1]= new Integer(registers[i].getNumber());
-            tableData[i][2]= NumberDisplayBaseChooser.formatNumber(registers[i].getValue(),valueBase);
+            if(i < 32) {
+            	tableData[i][2]= 
+            			NumberDisplayBaseChooser.formatNumber(registers[i+32].getValue(),valueBase)
+            			+ NumberDisplayBaseChooser.formatNumber(registers[i].getValue(),valueBase).substring(2);
+            } else {
+            	tableData[i][2]= NumberDisplayBaseChooser.formatNumber(registers[i].getValue(),valueBase);
+            }
          }
-         tableData[32][0]= "pc";
-         tableData[32][1]= "";//new Integer(32);
-         tableData[32][2]= NumberDisplayBaseChooser.formatUnsignedInteger(RegisterFile.getProgramCounter(),valueBase);
+         tableData[64][0]= "pc";
+         tableData[64][1]= "";//new Integer(32);
+         tableData[64][2]= NumberDisplayBaseChooser.formatUnsignedInteger(RegisterFile.getProgramCounter(),valueBase);
          
-         tableData[33][0]= "flags";
-         tableData[33][1]= "NZVC";//new Integer(34);
-         tableData[33][2]= "0000";
+         tableData[65][0]= "flags";
+         tableData[65][1]= "NZVC";//new Integer(34);
+         tableData[65][2]= "0000";
          
          return tableData;
       }
@@ -143,13 +149,23 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
        public void updateRegisters(int base) {
          registers = RegisterFile.getRegisters();
          for(int i=0; i< registers.length; i++){
-            updateRegisterValue(registers[i].getNumber(), registers[i].getValue(), base);
+        	 if(i < 32) {
+        		 updateLongRegisterValue(registers[i].getNumber(), registers[i+32].getValue(), registers[i].getValue(), base);
+        	 } else {
+        		 updateRegisterValue(registers[i].getNumber(), registers[i].getValue(), base);
+        	 }
          }
-         updateRegisterUnsignedValue(32, RegisterFile.getProgramCounter(), base);
+         //Removed use of custom PC register update function for uniformity
+         //updateRegisterUnsignedValue(32, RegisterFile.getProgramCounter(), base);
+         // Set PC string. No function since it's unique.
+         ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatUnsignedInteger(RegisterFile.getProgramCounter(),base), 64, 2);
          // Set flag string. No function since it's unique.
-         ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(RegisterFile.flagString(), 33, 2);
+         ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(RegisterFile.flagString(), 65, 2);
       }
-   	
+       
+	    //int hi = (int)(val >>> 32);
+	    //int lo = (int)(val << 32 >>> 32);
+       
      /**
        *  This method handles the updating of the GUI.  
    	 *   @param number The number of the register to update.
@@ -157,13 +173,28 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    	 **/
    	 
        public void updateRegisterValue(int number,int val, int base){
-         ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatNumber(val,base), number, 2);
-      }
-   
-   	 
+    	   if(number > 32)
+    		   ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatNumber(val,base), number-1, 2);
+    	   else
+    		   ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatNumber(val,base), number, 2);
+       }
+       public void updateLongRegisterValue(int number,int val1, int val2, int base){
+           ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(
+        		   (
+        				   NumberDisplayBaseChooser.formatNumber(val1,base)+
+        				   NumberDisplayBaseChooser.formatNumber(val2,base).substring(2)
+        		   ), 
+        		   number,
+        		   2
+        	);
+       }
+     
+       /*
+        * removed unecessary method for updating pc since its a single use and theres no need for encapsulation in this case
        private void updateRegisterUnsignedValue(int number,int val, int base){
-         ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatUnsignedInteger(val,base), number, 2);
-      }   
+    	   ((RegTableModel)table.getModel()).setDisplayAndModelValueAt(NumberDisplayBaseChooser.formatUnsignedInteger(val,base), number, 2);   
+       }
+       */
    	
     	/** Required by Observer interface.  Called when notified by an Observable that we are registered with.
    	 * Observables include:
@@ -375,42 +406,75 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
          }
 
           private String[] regToolTips = {
-             /* X0    */  "Arguments/Results",  
-             /* X1    */  "Arguments/Results",
-             /* X2    */  "Arguments/Results",
-             /* X3    */  "Arguments/Results",
-             /* X4    */  "Arguments/Results",
-             /* X5    */  "Arguments/Results",
-             /* X6    */  "Arguments/Results",
-             /* X7    */  "Arguments/Results",
-             /* X8    */  "Indirect location result register",
-             /* X9    */  "temporary (not preserved across call)",
-             /* X10   */  "temporary (not preserved across call)",
-             /* X11   */  "temporary (not preserved across call)",
-             /* X12   */  "temporary (not preserved across call)",
-             /* X13   */  "temporary (not preserved across call)",
-             /* X14   */  "temporary (not preserved across call)",
-             /* X15   */  "temporary (not preserved across call)",
-             /* X16   */  "May be used as a scratch register by the linker; Other times used as a temporary register",
-             /* X17   */  "May be used as a scratch register by the linker; Other times used as a temporary register",
-             /* X18   */  "Platform register for platform dependant code; otherwise a temporary register",
-             /* X19   */  "saved temporary (preserved across call)",
-             /* X20   */  "saved temporary (preserved across call)",
-             /* X21   */  "saved temporary (preserved across call)",
-             /* X22   */  "saved temporary (preserved across call)",
-             /* X23   */  "saved temporary (preserved across call)",
-             /* X24   */  "saved temporary (preserved across call)",
-             /* X25   */  "saved temporary (preserved across call)",
-             /* X26   */  "saved temporary (preserved across call)",
-             /* X27   */  "saved temporary (preserved across call)",
-             /* X28   */  "stack pointer",
-             /* X29   */  "frame pointer",
-             /* X30   */  "return address (used by function call)",
-             /* XZR   */  "The Constant Value Zero", 
+                  /* X0    */  "Arguments/Results",  
+                  /* X1    */  "Arguments/Results",
+                  /* X2    */  "Arguments/Results",
+                  /* X3    */  "Arguments/Results",
+                  /* X4    */  "Arguments/Results",
+                  /* X5    */  "Arguments/Results",
+                  /* X6    */  "Arguments/Results",
+                  /* X7    */  "Arguments/Results",
+                  /* X8    */  "Indirect location result register",
+                  /* X9    */  "temporary (not preserved across call)",
+                  /* X10   */  "temporary (not preserved across call)",
+                  /* X11   */  "temporary (not preserved across call)",
+                  /* X12   */  "temporary (not preserved across call)",
+                  /* X13   */  "temporary (not preserved across call)",
+                  /* X14   */  "temporary (not preserved across call)",
+                  /* X15   */  "temporary (not preserved across call)",
+                  /* X16   */  "May be used as a scratch register by the linker; Other times used as a temporary register",
+                  /* X17   */  "May be used as a scratch register by the linker; Other times used as a temporary register",
+                  /* X18   */  "Platform register for platform dependant code; otherwise a temporary register",
+                  /* X19   */  "saved temporary (preserved across call)",
+                  /* X20   */  "saved temporary (preserved across call)",
+                  /* X21   */  "saved temporary (preserved across call)",
+                  /* X22   */  "saved temporary (preserved across call)",
+                  /* X23   */  "saved temporary (preserved across call)",
+                  /* X24   */  "saved temporary (preserved across call)",
+                  /* X25   */  "saved temporary (preserved across call)",
+                  /* X26   */  "saved temporary (preserved across call)",
+                  /* X27   */  "saved temporary (preserved across call)",
+                  /* X28   */  "stack pointer",
+                  /* X29   */  "frame pointer",
+                  /* X30   */  "return address (used by function call)",
+                  /* XZR   */  "The Constant Value Zero", 
+                  /* W0    */  "32 most significant bits of register X0",
+                  /* W1    */  "32 most significant bits of register X1",
+                  /* W2    */  "32 most significant bits of register X2",
+                  /* W3    */  "32 most significant bits of register X3",
+                  /* W4    */  "32 most significant bits of register X4",
+                  /* W5    */  "32 most significant bits of register X5",
+                  /* W6    */  "32 most significant bits of register X6",
+                  /* W7    */  "32 most significant bits of register X7",
+                  /* W8    */  "32 most significant bits of register X8",
+                  /* W9    */  "32 most significant bits of register X9",
+                  /* W10   */  "32 most significant bits of register X10",
+                  /* W11   */  "32 most significant bits of register X11",
+                  /* W12   */  "32 most significant bits of register X12",
+                  /* W13   */  "32 most significant bits of register X13",
+                  /* W14   */  "32 most significant bits of register X14",
+                  /* W15   */  "32 most significant bits of register X15",
+                  /* W16   */  "32 most significant bits of register X16",
+                  /* W17   */  "32 most significant bits of register X17",
+                  /* W18   */  "32 most significant bits of register X18",
+                  /* W19   */  "32 most significant bits of register X19",
+                  /* W20   */  "32 most significant bits of register X20",
+                  /* W21   */  "32 most significant bits of register X21",
+                  /* W22   */  "32 most significant bits of register X22",
+                  /* W23   */  "32 most significant bits of register X23",
+                  /* W24   */  "32 most significant bits of register X24",
+                  /* W25   */  "32 most significant bits of register X25",
+                  /* W26   */  "32 most significant bits of register X26",
+                  /* W27   */  "32 most significant bits of register X27",
+                  /* W28   */  "32 most significant bits of register X28",
+                  /* W29   */  "32 most significant bits of register X29",
+                  /* W30   */  "32 most significant bits of register X30",
+                  /* W31   */  "32 most significant bits of register XZR",
              /* pc    */  "program counter",
+             /* rgf   */  "processor flags",
              /* hi    */  "high-order word of multiply product, or divide remainder",
-             /* lo    */  "low-order word of multiply product, or divide quotient",
-             /* rgf   */  "processor flags"
+             /* lo    */  "low-order word of multiply product, or divide quotient"
+
              };
       
 //          Preserved for comparison TODO: delete

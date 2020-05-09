@@ -53,23 +53,72 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       private static boolean flagC = false;
    
       private static Register [] regFile = 
-          { new Register("X0", 0, 0),new Register("X1", 1, 0),
-         	new Register("X2", 2, 0),new Register("X3", 3, 0),
-         	new Register("X4", 4, 0),new Register("X5", 5, 0),
-         	new Register("X6", 6, 0),new Register("X7", 7, 0),
-         	new Register("X8", 8, 0),new Register("X9", 9, 0),
-         	new Register("X10", 10, 0),new Register("X11", 11, 0), 
-         	new Register("X12", 12, 0),new Register("X13", 13, 0),
-         	new Register("X14", 14, 0),new Register("X15", 15, 0),
-         	new Register("X16", 16, 0),new Register("X17", 17, 0),
-         	new Register("X18", 18, 0),new Register("X19", 19, 0),
-         	new Register("X20", 20, 0),new Register("X21", 21, 0),
-         	new Register("X22", 22, 0),new Register("X23", 23, 0),
-         	new Register("X24", 24, 0),new Register("X25", 25, 0),
-         	new Register("X26", 26, 0),new Register("X27", 27, 0),
+          { new Register("X0", 0, 0),
+        	new Register("X1", 1, 0),
+         	new Register("X2", 2, 0),
+         	new Register("X3", 3, 0),
+         	new Register("X4", 4, 0),
+         	new Register("X5", 5, 0),
+         	new Register("X6", 6, 0),
+         	new Register("X7", 7, 0),
+         	new Register("X8", 8, 0),
+         	new Register("X9", 9, 0),
+         	new Register("X10", 10, 0),
+         	new Register("X11", 11, 0), 
+         	new Register("X12", 12, 0),
+         	new Register("X13", 13, 0),
+         	new Register("X14", 14, 0),
+         	new Register("X15", 15, 0),
+         	new Register("X16", 16, 0),
+         	new Register("X17", 17, 0),
+         	new Register("X18", 18, 0),
+         	new Register("X19", 19, 0),
+         	new Register("X20", 20, 0),
+         	new Register("X21", 21, 0),
+         	new Register("X22", 22, 0),
+         	new Register("X23", 23, 0),
+         	new Register("X24", 24, 0),
+         	new Register("X25", 25, 0),
+         	new Register("X26", 26, 0),
+         	new Register("X27", 27, 0),
          	new Register("X28", 28, Memory.stackPointer),
          	new Register("X29", 29, 0),
-         	new Register("X30", 30, 0),new Register("XZR", 31, 0)
+         	new Register("X30", 30, 0),
+         	new Register("XZR", 31, 0),
+         	// 32-high-order-bit registers for 64bit operations
+         	// reg + 33 retrieves the corresponding register for high order bits of the specific register
+         	new Register("W0", 33, 0),
+        	new Register("W1", 34, 0),
+         	new Register("W2", 35, 0),
+         	new Register("W3", 36, 0),
+         	new Register("W4", 37, 0),
+         	new Register("W5", 38, 0),
+         	new Register("W6", 39, 0),
+         	new Register("W7", 40, 0),
+         	new Register("W8", 41, 0),
+         	new Register("W9", 42, 0),
+         	new Register("W10", 43, 0),
+         	new Register("W11", 44, 0), 
+         	new Register("W12", 45, 0),
+         	new Register("W13", 46, 0),
+         	new Register("W14", 47, 0),
+         	new Register("W15", 48, 0),
+         	new Register("W16", 49, 0),
+         	new Register("W17", 50, 0),
+         	new Register("W18", 51, 0),
+         	new Register("W19", 52, 0),
+         	new Register("W20", 53, 0),
+         	new Register("W21", 54, 0),
+         	new Register("W22", 55, 0),
+         	new Register("W23", 56, 0),
+         	new Register("W24", 57, 0),
+         	new Register("W25", 58, 0),
+         	new Register("W26", 59, 0),
+         	new Register("W27", 60, 0),
+         	new Register("W28", 61, 0),
+         	new Register("W29", 62, 0),
+         	new Register("W30", 63, 0),
+         	new Register("WZR", 64, 0)
            };
 
       private static Register programCounter= new Register("pc", 32, Memory.textBaseAddress);
@@ -181,6 +230,66 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 		}
 		return old;
 	}
+	
+	public static long updateLongRegister(int num, long val) {
+		int old1 = 0;
+		int old2 = 0;
+		int changedFlag = 0;
+	    int hi = (int)(val >>> 32);
+	    int lo = (int)(val << 32 >>> 32);
+	    System.out.println("Updating r["+num+"] = "+String.format("0x%08X", hi) + " | " + String.format("0x%08X", lo));
+		if (num == 31) {
+			// System.out.println("You can not change the value of the zero  register.");
+		} else {
+			for (int i = 0; i < regFile.length; i++) {
+				if (regFile[i].getNumber() == num && i < 31) {
+					if(Globals.getSettings().getBackSteppingEnabled()){
+						System.out.println("Changing register "+regFile[i].getName());
+						old1 = Globals.program.getBackStepper().addRegisterFileRestore(num, regFile[i].setValue(lo));
+						System.out.println("Changing register "+regFile[i+32].getName());
+						old2 = Globals.program.getBackStepper().addRegisterFileRestore(num, regFile[i+32].setValue(hi));
+					} else {
+						regFile[i].setValue(lo);
+						regFile[i+32].setValue(hi);
+					}
+					break;
+				}
+			}
+		}
+		return ((long)(hi) << 32 | (long)(lo) & 0xFFFFFFFFL);
+	}
+	
+	/**
+	 * TODO IMPLEMENTATION OF 64BIT REGISTERS
+	 * 
+	 * @param num
+	 *            Register to set the value of.
+	 * @param val
+	 *            The desired value for the register.
+	 *            
+	 * @author GABRIEL RIBEIRO
+	 **/
+
+	/*
+	public static long updateRegister(int num, long val) {
+	    int hi = (int)(val >>> 32);
+	    int lo = (int)(val << 32 >>> 32);
+	    
+		long old = 0;
+		if (num == 31) {
+			// System.out.println("You can not change the value of the zero  register.");
+		} else {
+			for (int i = 0; i < regFile.length; i++) {
+				if (regFile[i].getNumber() == num) {
+					old = (Globals.getSettings().getBackSteppingEnabled())
+							? Globals.program.getBackStepper().addRegisterFileRestore(num, regFile[i].setValue(val))
+							: regFile[i].setValue(val);
+					break;
+				}
+			}
+		}
+		return old;
+	}*/
 
 	/**
 	 * Sets the value of the register given to the value given.
@@ -214,6 +323,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	 **/
 
 	public static int getValue(int num) {
+		return regFile[num].getValue();
+
+	}
+	public static long getLongValue(int num) {
+		if(num<32) {
+			long hi = (long)(regFile[num+32].getValue()) << 32;
+			long lo = (long)(regFile[num].getValue()) & 0xFFFFFFFFL;
+			return (hi|lo);
+		}
 		return regFile[num].getValue();
 
 	}

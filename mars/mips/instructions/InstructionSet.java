@@ -207,7 +207,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                    }
                 }));
          
-         instructionList.add(
+/*         instructionList.add(
                 new BasicInstruction("ADDI X1,X2,100",
             	 "Addition immediate with overflow : set X1 to (X2 plus unsigned 16-bit immediate)",
                 BasicInstructionFormat.I_FORMAT,
@@ -231,7 +231,34 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                      }
                      RegisterFile.updateRegister(operands[0], sum);
                   }
-               }));
+               }));*/
+         
+         // ADDI with long for testing
+         instructionList.add(
+                 new BasicInstruction("ADDI X1,X2,100",
+             	 "Addition immediate with overflow : set X1 to (X2 plus unsigned 16-bit immediate)",
+                 BasicInstructionFormat.I_FORMAT,
+                 //"001000 sssss fffff tttttttttttttttt",
+                 "1001000100 tttttttttttt  sssss fffff ",
+                         
+                 new SimulationCode()
+                {
+                    public void simulate(ProgramStatement statement) throws ProcessingException
+                   {
+                      int[] operands = statement.getOperands();
+                      long add1 = RegisterFile.getLongValue(operands[1]);
+                      long add2 = (long) (operands[2] << 16 >> 16);
+                      long sum = add1 + add2;
+                   // overflow on A+B detected when A and B have same sign and A+B has other sign.
+                      // no need to check add2 since we know the sign already
+                      if (add1 >= 0 && sum < 0)
+                      {
+                         throw new ProcessingException(statement,
+                             "arithmetic overflow",Exceptions.ARITHMETIC_OVERFLOW_EXCEPTION);
+                      }
+                      RegisterFile.updateLongRegister(operands[0], sum);
+                   }
+                }));
          
          instructionList.add(
                  new BasicInstruction("ADDIS X1,X2,100",
@@ -265,7 +292,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                    }
                 }));
          
-         instructionList.add(
+/*         instructionList.add(
                  new BasicInstruction("SUBI X1,X2,100",
              	 "Subtraction immediate with overflow : set X1 to (X2 minus unsigned 16-bit immediate)",
                  BasicInstructionFormat.I_FORMAT,
@@ -288,6 +315,31 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
                              "arithmetic overflow",Exceptions.ARITHMETIC_OVERFLOW_EXCEPTION);
                       }
                       RegisterFile.updateRegister(operands[0], sum);
+                   }
+                }));*/
+         instructionList.add(
+                 new BasicInstruction("SUBI X1,X2,100",
+             	 "Subtraction immediate with overflow : set X1 to (X2 minus unsigned 16-bit immediate)",
+                 BasicInstructionFormat.I_FORMAT,
+                // "001000 sssss fffff tttttttttttttttt",
+                "1101000100 tttttttttttt  sssss fffff ",
+                         
+                 new SimulationCode()
+                {
+                    public void simulate(ProgramStatement statement) throws ProcessingException
+                   {
+                        int[] operands = statement.getOperands();
+                        long add1 = RegisterFile.getLongValue(operands[1]);
+                        long add2 = (long) (operands[2] << 16 >> 16);
+                        long sum = add1 - add2;
+                   // overflow on A+B detected when A and B have same sign and A+B has other sign.
+                      // no need to check add2 since we know the sign already
+                      if (add1 < 0 && sum >= 0)
+                      {
+                         throw new ProcessingException(statement,
+                             "arithmetic overflow",Exceptions.ARITHMETIC_OVERFLOW_EXCEPTION);
+                      }
+                      RegisterFile.updateLongRegister(operands[0], sum);
                    }
                 }));
          
